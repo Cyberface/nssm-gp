@@ -9,7 +9,8 @@ import tensorflow as tf
 import numpy as np
 
 import gpflow
-from gpflow import Param, ParamList
+from gpflow import Parameter as Param
+from gpflow import ParamList
 from gpflow.conditionals import conditional
 
 from gpflow import settings
@@ -269,4 +270,3 @@ class SpectralSVGP(gpflow.models.SVGP):
         mu, var = conditional(Xnew, self.feature, self, self.q_mu, q_sqrt=self.q_sqrt,
                               full_cov=full_cov, white=self.whiten, full_output_cov=full_output_cov)
         return mu + self.mean_function(Xnew), var
-

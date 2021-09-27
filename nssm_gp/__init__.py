@@ -2,8 +2,8 @@
 """
 
 from . import spectral_kernels
-from . import spectral_svgp
+# from . import spectral_svgp
 from . import initializers
-from . import neural
+# from . import neural
 
 __author__ = 'Sami Remes'
