@@ -179,20 +179,20 @@ def init_spectral(x, y, M, Q, kern, n_inits=10, minibatch_size=256, noise_var=10
     for k in range(n_inits):
         try:
             #gpflow.reset_default_graph_and_session()
-            with gpflow.defer_build():
-                Z = random_Z(x, N, M)
-                dists = pdist(Z, 'euclidean').ravel()
-                max_freq = min(10.0, 1./np.min(dists[dists > 0.0]))
-                max_len = min(5.0, np.max(dists) * (2*np.pi))
-                k = kern(input_dim=input_dim, max_freq=max_freq, Q=Q, ARD=ARD, max_len=max_len)
-                if likelihood is not None:
-                    likhood = likelihood
-                else:
-                    likhood = gpflow.likelihoods.Gaussian(noise_var)
-                    likhood.variance.prior = gpflow.priors.LogNormal(mu=0, var=1)
-                model = SVGP(X=x, Y=y, Z=Z, kern=k, likelihood=likhood,
-                             minibatch_size=minibatch_size)
-                model.feature.Z.prior = gpflow.priors.Gaussian(0, 1)
+            # with gpflow.defer_build():
+            Z = random_Z(x, N, M)
+            dists = pdist(Z, 'euclidean').ravel()
+            max_freq = min(10.0, 1./np.min(dists[dists > 0.0]))
+            max_len = min(5.0, np.max(dists) * (2*np.pi))
+            k = kern(input_dim=input_dim, max_freq=max_freq, Q=Q, ARD=ARD, max_len=max_len)
+            if likelihood is not None:
+                likhood = likelihood
+            else:
+                likhood = gpflow.likelihoods.Gaussian(noise_var)
+                likhood.variance.prior = gpflow.priors.LogNormal(mu=0, var=1)
+            model = SVGP(X=x, Y=y, Z=Z, kern=k, likelihood=likhood,
+                            minibatch_size=minibatch_size)
+            model.feature.Z.prior = gpflow.priors.Gaussian(0, 1)
             model.compile()
             loglik = model.compute_log_likelihood()
             if loglik > best_loglik:

@@ -28,9 +28,9 @@ class SMKernelComponent(Stationary):
     """
     def __init__(self, input_dim, variance=1.0, lengthscales=None,
                  frequency=1.0, active_dims=None, ARD=False):
-        Stationary.__init__(self, input_dim=input_dim, variance=variance, lengthscales=lengthscales,
-                            active_dims=active_dims, ARD=ARD)
-        self.frequency = Param(frequency, bijectors.positive, dtype=float_type)
+        Stationary.__init__(self, variance=variance, lengthscales=lengthscales,
+                            active_dims=active_dims)
+        self.frequency = Param(frequency, transform=bijectors.positive(), dtype=float_type)
         self.frequency.prior = gpflow.priors.Exponential(1.0)
         self.variance.prior = gpflow.priors.LogNormal(0, 1)
 
@@ -104,9 +104,9 @@ class BSMKernelComponent(Kernel):
                  lengthscale=1.0, correlation=0.0, max_freq=1.0, active_dims=None):
         assert(input_dim == 1)  # the derivations are valid only for one dimensional input
         Kernel.__init__(self, input_dim=input_dim, active_dims=active_dims)
-        self.variance = Param(variance, bijectors.positive)
+        self.variance = Param(variance, bijectors.positive())
         self.frequency = Param(frequency, tfb.Logistic(0.0, max_freq))
-        self.lengthscale = Param(lengthscale, bijectors.positive)
+        self.lengthscale = Param(lengthscale, bijectors.positive())
         correlation = np.clip(correlation, 1e-4, 1-1e-4)  # clip for numerical reasons
         self.correlation = Param(correlation, tfb.Logistic())
 

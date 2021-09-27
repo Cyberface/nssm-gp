@@ -23,7 +23,8 @@ from zipfile import ZipFile
 import csv
 
 import gpflow
-float_type = gpflow.settings.float_type
+# float_type = gpflow.settings.float_type
+float_type = gpflow.default_float()
 
 
 class Dataset(object):
